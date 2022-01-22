@@ -2,6 +2,7 @@ package app
 
 import (
 	"encoding/json"
+	"html/template"
 	"net/http"
 )
 
@@ -29,5 +30,24 @@ func (s *Server) Watch() http.HandlerFunc {
 		}
 		w.WriteHeader(http.StatusOK)
 		w.Write(raw)
+	}
+}
+
+func (s *Server) ServeIndexPage() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		latestBlock, err := s.watchService.GetLatestBlock("klaytn")
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("failed to get klaytn's latest block"))
+			return
+		}
+
+		t, err := template.ParseFiles("web/index.html")
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("failed to parse html file"))
+		}
+		t.Execute(w, latestBlock)
 	}
 }
