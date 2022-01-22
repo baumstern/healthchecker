@@ -14,7 +14,9 @@ type Server struct {
 }
 
 func NewServer(cfg *config.Config, watchService api.WatchService) *Server {
-	return &Server{watchService: watchService}
+	return &Server{
+		cfg:          cfg,
+		watchService: watchService}
 }
 
 func (s *Server) Start() {
