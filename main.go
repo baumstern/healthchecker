@@ -19,6 +19,10 @@ func main() {
 	if err != nil {
 		log.Fatalln("failed to start watch")
 	}
+	err = watchService.Start("ethereum")
+	if err != nil {
+		log.Fatalln("failed to start watch")
+	}
 
 	s := app.NewServer(cfg, watchService)
 	s.Start()

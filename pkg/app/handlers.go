@@ -43,11 +43,19 @@ func (s *Server) ServeIndexPage() http.HandlerFunc {
 			return
 		}
 
+		ethLatestBlock, err := s.watchService.GetLatestBlock("ethereum")
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("failed to get klaytn's latest block"))
+			return
+		}
+
 		t, err := template.ParseFiles("web/index.html")
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("failed to parse html file"))
 		}
 		t.Execute(w, latestBlock)
+		t.Execute(w, ethLatestBlock)
 	}
 }

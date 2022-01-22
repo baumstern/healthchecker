@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 	"healthcheck/pkg/collector"
+	"healthcheck/pkg/collector/ethereum"
 	"healthcheck/pkg/collector/klaytn"
 	"healthcheck/pkg/config"
 )
@@ -14,6 +15,11 @@ type klaytnClient struct {
 	cancelWatch cancel
 }
 
+type ethereumClient struct {
+	client      ethereum.Client
+	cancelWatch cancel
+}
+
 type WatchService interface {
 	Start(blockchainType string) error
 	Stop(blockchainType string) error
@@ -21,15 +27,22 @@ type WatchService interface {
 }
 
 type watchService struct {
-	klaytn klaytnClient
+	ethereum ethereumClient
+	klaytn   klaytnClient
 }
 
 func NewWatchService(cfg *config.Config) WatchService {
-	return &watchService{klaytn: klaytnClient{*klaytn.NewClient(cfg.Klaytn.AccessToken), nil}}
+	return &watchService{
+		ethereum: ethereumClient{*ethereum.NewClient(cfg.Ethereum.ApiKey), nil},
+		klaytn:   klaytnClient{*klaytn.NewClient(cfg.Klaytn.AccessToken), nil},
+	}
 }
 
 func (w *watchService) Start(blockchainType string) error {
 	switch blockchainType {
+	case "ethereum":
+		w.ethereum.cancelWatch = w.ethereum.client.Watch()
+		return nil
 	case "klaytn":
 		w.klaytn.cancelWatch = w.klaytn.client.Watch()
 		return nil
@@ -40,6 +53,9 @@ func (w *watchService) Start(blockchainType string) error {
 
 func (w *watchService) Stop(blockchainType string) error {
 	switch blockchainType {
+	case "ethereum":
+		w.ethereum.cancelWatch()
+		return nil
 	case "klaytn":
 		w.klaytn.cancelWatch()
 		return nil
@@ -50,6 +66,8 @@ func (w *watchService) Stop(blockchainType string) error {
 
 func (w *watchService) GetLatestBlock(blockchainType string) (*collector.LatestBlock, error) {
 	switch blockchainType {
+	case "ethereum":
+		return w.ethereum.client.GetLatestBlock(), nil
 	case "klaytn":
 		return w.klaytn.client.GetLatestBlock(), nil
 	default:

@@ -11,6 +11,9 @@ type Config struct {
 	Server struct {
 		Port string `yaml:"port"`
 	}
+	Ethereum struct {
+		ApiKey string `yaml:"api_key"`
+	}
 	Klaytn struct {
 		AccessToken string `yaml:"access_token"`
 	}
