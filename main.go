@@ -11,6 +11,7 @@ func main() {
 	cfg, err := config.LoadConfig()
 	if err != nil {
 		log.Println("failed to load config file:", err)
+		cfg = &config.Config{}
 	}
 
 	watchService := api.NewWatchService(cfg)

@@ -24,6 +24,9 @@ type Client struct {
 }
 
 func NewClient(accessToken string) *Client {
+	if accessToken == "" {
+		log.Fatalln("access token for klaytn is not provied")
+	}
 	return &Client{
 		latestBlock: &collector.LatestBlock{},
 		accessToken: accessToken,
