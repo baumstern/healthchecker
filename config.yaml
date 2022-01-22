@@ -1,0 +1,4 @@
+server:
+  port: 8080
+klaytn:
+  access_token: <YOUR-ACCESS-TOKEN>
