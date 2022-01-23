@@ -2,10 +2,10 @@ package api
 
 import (
 	"fmt"
-	"healthcheck/pkg/collector"
-	"healthcheck/pkg/collector/ethereum"
-	"healthcheck/pkg/collector/klaytn"
-	"healthcheck/pkg/config"
+	"healthchecker/pkg/collector"
+	"healthchecker/pkg/collector/ethereum"
+	"healthchecker/pkg/collector/klaytn"
+	"healthchecker/pkg/config"
 )
 
 type cancel func()

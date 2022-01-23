@@ -2,8 +2,8 @@ package app
 
 import (
 	"errors"
-	"healthcheck/pkg/api"
-	"healthcheck/pkg/config"
+	"healthchecker/pkg/api"
+	"healthchecker/pkg/config"
 	"log"
 	"net/http"
 )

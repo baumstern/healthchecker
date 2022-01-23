@@ -1,9 +1,9 @@
 package main
 
 import (
-	"healthcheck/pkg/api"
-	"healthcheck/pkg/app"
-	"healthcheck/pkg/config"
+	"healthchecker/pkg/api"
+	"healthchecker/pkg/app"
+	"healthchecker/pkg/config"
 	"log"
 )
 
