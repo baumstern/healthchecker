@@ -1,6 +1,7 @@
 package config
 
 import (
+	"errors"
 	"log"
 	"os"
 
@@ -28,9 +29,14 @@ func LoadConfig() (*Config, error) {
 
 	err := cfg.loadFromYaml()
 	if err != nil {
-		return nil, err
+		log.Println("failed to get config from yaml file:", err)
 	}
 	err = cfg.loadFromEnv()
+	if err != nil {
+		return nil, err
+	}
+
+	err = cfg.checkApiTokens()
 	if err != nil {
 		return nil, err
 	}
@@ -41,14 +47,12 @@ func LoadConfig() (*Config, error) {
 func (c *Config) loadFromYaml() error {
 	f, err := os.Open("config.yaml")
 	if err != nil {
-		log.Println("failed to open config.yaml file:", err)
 		return err
 	}
 	defer f.Close()
 
 	err = yaml.NewDecoder(f).Decode(c)
 	if err != nil {
-		log.Fatalln("failed to decode config.yaml file:", err)
 		return err
 	}
 	return nil
@@ -57,9 +61,16 @@ func (c *Config) loadFromYaml() error {
 func (c *Config) loadFromEnv() error {
 	err := envconfig.Process("healthchecker", c)
 	if err != nil {
-		log.Fatalln("failed to get configuration :", err)
+		log.Fatalln("failed to get configuration:", err)
 		return err
 	}
 
+	return nil
+}
+
+func (c *Config) checkApiTokens() error {
+	if c.Ethereum.ApiKey == "" || c.Klaytn.AccessToken == "" {
+		return errors.New("couldn't get blockchain status: API token didn't provided")
+	}
 	return nil
 }
