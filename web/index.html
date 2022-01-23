@@ -1,3 +1,9 @@
-<h1>healthchecker</h1>
+<div>Please refresh to update each status</div>
 
-<div><textarea name="body" rows="20" cols="80">{{printf "block: %d (%s)" .Num .Timestamp}}</textarea></div>
+<h1>{{printf "%s" .ethereum.Network}}</h1>
+
+<div><textarea name="body" rows="1" cols="60">{{printf "block: %d (%s)" .ethereum.LatestBlock.Num .ethereum.LatestBlock.Timestamp}}</textarea></div>
+
+<h1>{{printf "%s" .klaytn.Network}}</h1>
+
+<div><textarea name="body" rows="1" cols="60">{{printf "block: %d (%s)" .klaytn.LatestBlock.Num .klaytn.LatestBlock.Timestamp}}</textarea></div>

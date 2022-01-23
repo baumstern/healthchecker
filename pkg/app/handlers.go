@@ -2,6 +2,7 @@ package app
 
 import (
 	"encoding/json"
+	"healthchecker/pkg/collector"
 	"html/template"
 	"net/http"
 )
@@ -36,14 +37,14 @@ func (s *Server) Watch() http.HandlerFunc {
 func (s *Server) ServeIndexPage() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		latestBlock, err := s.watchService.GetLatestBlock("klaytn")
+		ethLatestBlock, err := s.watchService.GetLatestBlock("ethereum")
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("failed to get klaytn's latest block"))
 			return
 		}
 
-		ethLatestBlock, err := s.watchService.GetLatestBlock("ethereum")
+		KlayLatestBlock, err := s.watchService.GetLatestBlock("klaytn")
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("failed to get klaytn's latest block"))
@@ -55,7 +56,19 @@ func (s *Server) ServeIndexPage() http.HandlerFunc {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("failed to parse html file"))
 		}
-		t.Execute(w, latestBlock)
-		t.Execute(w, ethLatestBlock)
+
+		t.Execute(w, map[string]struct {
+			Network     string
+			LatestBlock *collector.LatestBlock
+		}{
+			"ethereum": {
+				Network:     "Ethereum",
+				LatestBlock: ethLatestBlock,
+			},
+			"klaytn": {
+				Network:     "Klaytn",
+				LatestBlock: KlayLatestBlock,
+			},
+		})
 	}
 }
