@@ -1,4 +1,10 @@
 server:
   port: 8080
+  
+ethereum:
+  api_key:             # Put your api key from https://www.alchemy.com
+  watch_interval: 7
+  
 klaytn:
-  access_token: <YOUR-ACCESS-TOKEN>
+  access_token:        # Put your api key from https://console.klaytnapi.com
+  watch_interval: 1

@@ -2,4 +2,7 @@ module healthcheck
 
 go 1.17
 
-require gopkg.in/yaml.v2 v2.4.0 // indirect
+require (
+	github.com/kelseyhightower/envconfig v1.4.0 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
+)
