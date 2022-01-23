@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"healthcheck/pkg/collector"
+	"healthcheck/pkg/config"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -19,17 +20,19 @@ type ResponseBlockNumber struct {
 }
 
 type Client struct {
-	latestBlock *collector.LatestBlock
-	accessToken string
+	latestBlock   *collector.LatestBlock
+	accessToken   string
+	watchInterval int
 }
 
-func NewClient(accessToken string) *Client {
-	if accessToken == "" {
+func NewClient(cfg *config.Config) *Client {
+	if cfg.Klaytn.AccessToken == "" {
 		log.Fatalln("access token for klaytn is not provied")
 	}
 	return &Client{
-		latestBlock: &collector.LatestBlock{},
-		accessToken: accessToken,
+		latestBlock:   &collector.LatestBlock{},
+		accessToken:   cfg.Klaytn.AccessToken,
+		watchInterval: cfg.Klaytn.WatchInterval,
 	}
 }
 
@@ -58,7 +61,7 @@ func (c *Client) Watch() func() {
 				c.latestBlock.Num = latestBlockNum
 				c.latestBlock.Timestamp = time.Now()
 
-				time.Sleep(1 * time.Second)
+				time.Sleep(time.Duration(c.watchInterval) * time.Second)
 			}
 		}
 	}()

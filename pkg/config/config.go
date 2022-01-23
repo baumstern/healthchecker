@@ -12,10 +12,12 @@ type Config struct {
 		Port string `yaml:"port"`
 	}
 	Ethereum struct {
-		ApiKey string `yaml:"api_key"`
+		ApiKey        string `yaml:"api_key"`
+		WatchInterval int    `yaml:"watch_interval"`
 	}
 	Klaytn struct {
-		AccessToken string `yaml:"access_token"`
+		AccessToken   string `yaml:"access_token"`
+		WatchInterval int    `yaml:"watch_interval"`
 	}
 }
 

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"healthcheck/pkg/collector"
+	"healthcheck/pkg/config"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -19,17 +20,19 @@ type ResponseBlockNumber struct {
 }
 
 type Client struct {
-	latestBlock *collector.LatestBlock
-	apiKey      string
+	latestBlock   *collector.LatestBlock
+	apiKey        string
+	watchInterval int
 }
 
-func NewClient(apiKey string) *Client {
-	if apiKey == "" {
+func NewClient(cfg *config.Config) *Client {
+	if cfg.Ethereum.ApiKey == "" {
 		log.Fatalln("API key for Ethereum is not provied")
 	}
 	return &Client{
-		latestBlock: &collector.LatestBlock{},
-		apiKey:      apiKey,
+		latestBlock:   &collector.LatestBlock{},
+		apiKey:        cfg.Ethereum.ApiKey,
+		watchInterval: cfg.Ethereum.WatchInterval,
 	}
 }
 
@@ -58,7 +61,7 @@ func (c *Client) Watch() func() {
 				c.latestBlock.Num = latestBlockNum
 				c.latestBlock.Timestamp = time.Now()
 
-				time.Sleep(1 * time.Second)
+				time.Sleep(time.Duration(c.watchInterval) * time.Second)
 			}
 		}
 	}()

@@ -33,8 +33,8 @@ type watchService struct {
 
 func NewWatchService(cfg *config.Config) WatchService {
 	return &watchService{
-		ethereum: ethereumClient{*ethereum.NewClient(cfg.Ethereum.ApiKey), nil},
-		klaytn:   klaytnClient{*klaytn.NewClient(cfg.Klaytn.AccessToken), nil},
+		ethereum: ethereumClient{*ethereum.NewClient(cfg), nil},
+		klaytn:   klaytnClient{*klaytn.NewClient(cfg), nil},
 	}
 }
 
