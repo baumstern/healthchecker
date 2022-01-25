@@ -2,6 +2,7 @@ package app
 
 import (
 	"encoding/json"
+	"fmt"
 	"healthchecker/pkg/collector"
 	"html/template"
 	"net/http"
@@ -19,7 +20,7 @@ func (s *Server) Watch() http.HandlerFunc {
 		latestBlock, err := s.watchService.GetLatestBlock(network)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("failed to get klaytn's latest block"))
+			w.Write([]byte(fmt.Sprintf("failed to get %s's latest block", network)))
 			return
 		}
 
