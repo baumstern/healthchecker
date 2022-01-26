@@ -42,9 +42,6 @@ func (c *Client) GetLatestBlock() *collector.LatestBlock {
 
 func (c *Client) Watch() func() {
 	done := make(chan struct{})
-	cancel := func() {
-		close(done)
-	}
 
 	go func() {
 		for {
@@ -57,15 +54,18 @@ func (c *Client) Watch() func() {
 				if err != nil {
 					log.Println("failed to check latest block:", err)
 				}
-
-				c.latestBlock.Num = latestBlockNum
-				c.latestBlock.Timestamp = time.Now()
+				if latestBlockNum > c.latestBlock.Num {
+					c.latestBlock.Num = latestBlockNum
+					c.latestBlock.Timestamp = time.Now()
+				}
 
 				time.Sleep(time.Duration(c.watchInterval) * time.Second)
 			}
 		}
 	}()
-	return cancel
+	return func() {
+		close(done)
+	}
 }
 
 func (c *Client) getLatestBlock() (int64, error) {
