@@ -7,4 +7,4 @@ ethereum:
   
 klaytn:
   access_token:        # Put your api key from https://console.klaytnapi.com
-  watch_interval: 1
+  watch_interval: 10
