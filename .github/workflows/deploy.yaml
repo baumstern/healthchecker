@@ -18,6 +18,7 @@ jobs:
       - uses: actions/checkout@v2
       - run: |
           cd web
+          yarn install
           yarn build
       - uses: superfly/flyctl-actions@1.1
         with:
