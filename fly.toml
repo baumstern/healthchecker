@@ -11,7 +11,7 @@ processes = []
   buildpacks = ["gcr.io/paketo-buildpacks/go"]
 
   [build.args]
-    BP_KEEP_FILES = "web/*"
+    BP_KEEP_FILES = "web/build/*"
 
 
 [env]

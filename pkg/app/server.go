@@ -1,21 +1,22 @@
 package app
 
 import (
-	"errors"
 	"healthchecker/pkg/api"
 	"healthchecker/pkg/config"
-	"log"
-	"net/http"
+
+	"github.com/labstack/echo"
 )
 
 type Server struct {
 	cfg          *config.Config
+	router       *echo.Echo
 	watchService api.WatchService
 }
 
 func NewServer(cfg *config.Config, watchService api.WatchService) *Server {
 	return &Server{
 		cfg:          cfg,
+		router:       echo.New(),
 		watchService: watchService}
 }
 
@@ -28,9 +29,5 @@ func (s *Server) Start() {
 		port = s.cfg.Server.Port
 	}
 
-	if err := http.ListenAndServe(":"+port, nil); errors.Is(err, http.ErrServerClosed) {
-		log.Fatalln("Web server has shut down")
-	} else {
-		log.Fatalln("Web server has shut down unexpectedly")
-	}
+	s.router.Logger.Fatal((s.router.Start((":" + port))))
 }

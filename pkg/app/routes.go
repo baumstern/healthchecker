@@ -1,11 +1,9 @@
 package app
 
-import (
-	"net/http"
-)
-
 // BuildPipeline builds the HTTP pipeline
 func (s *Server) Routes() {
-	http.HandleFunc("/", s.ServeIndexPage())
-	http.HandleFunc("/api/watch", s.Watch())
+	s.router.File("/", "web/build/index.html")
+	s.router.Static("/static", "web/build/static")
+
+	s.router.GET("/api/watch", s.Watch)
 }
